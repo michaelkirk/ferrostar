@@ -84,7 +84,7 @@ public struct DynamicallyOrientingNavigationView: View, CustomizableNavigatingIn
                     LandscapeNavigationOverlayView(
                         navigationState: navigationState,
                         speedLimit: nil,
-                        showZoom: true,
+                        showZoom: false,
                         onZoomIn: { camera.incrementZoom(by: 1) },
                         onZoomOut: { camera.incrementZoom(by: -1) },
                         showCentering: !camera.isTrackingUserLocationWithCourse,
@@ -104,7 +104,7 @@ public struct DynamicallyOrientingNavigationView: View, CustomizableNavigatingIn
                     PortraitNavigationOverlayView(
                         navigationState: navigationState,
                         speedLimit: nil,
-                        showZoom: true,
+                        showZoom: false,
                         onZoomIn: { camera.incrementZoom(by: 1) },
                         onZoomOut: { camera.incrementZoom(by: -1) },
                         showCentering: !camera.isTrackingUserLocationWithCourse,
