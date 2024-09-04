@@ -24,6 +24,7 @@ struct PortraitNavigationOverlayView: View, CustomizableNavigatingInnerGridView 
     var onZoomIn: () -> Void
     var onZoomOut: () -> Void
     var showCentering: Bool
+    var destinationName: String?
     var onCenter: () -> Void
     var onTapExit: (() -> Void)?
 
@@ -34,6 +35,7 @@ struct PortraitNavigationOverlayView: View, CustomizableNavigatingInnerGridView 
         onZoomIn: @escaping () -> Void = {},
         onZoomOut: @escaping () -> Void = {},
         showCentering: Bool = false,
+        destinationName: String? = nil,
         onCenter: @escaping () -> Void = {},
         onTapExit: (() -> Void)? = nil
     ) {
@@ -44,6 +46,7 @@ struct PortraitNavigationOverlayView: View, CustomizableNavigatingInnerGridView 
         self.onZoomOut = onZoomOut
         self.showCentering = showCentering
         self.onCenter = onCenter
+        self.destinationName = destinationName
         self.onTapExit = onTapExit
     }
 
@@ -97,6 +100,8 @@ struct PortraitNavigationOverlayView: View, CustomizableNavigatingInnerGridView 
                     isExpanded: $isInstructionViewExpanded,
                     sizeWhenNotExpanded: $instructionsViewSizeWhenNotExpanded
                 )
+            } else if case .complete = navigationState?.tripState {
+                TripCompleteBanner(destinationName: destinationName, onTapExit: onTapExit)
             }
         }
     }

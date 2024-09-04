@@ -23,6 +23,7 @@ public struct DynamicallyOrientingNavigationView: View, CustomizableNavigatingIn
     public var topTrailing: (() -> AnyView)?
     public var midLeading: (() -> AnyView)?
     public var bottomTrailing: (() -> AnyView)?
+    public var destinationName: String?
 
     var onTapExit: (() -> Void)?
 
@@ -47,6 +48,7 @@ public struct DynamicallyOrientingNavigationView: View, CustomizableNavigatingIn
         navigationCamera: MapViewCamera = .automotiveNavigation(),
         navigationState: NavigationState?,
         minimumSafeAreaInsets: EdgeInsets = EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16),
+        destinationName: String? = nil,
         onTapExit: (() -> Void)? = nil,
         @MapViewContentBuilder makeMapContent: () -> [StyleLayerDefinition] = { [] }
     ) {
@@ -54,6 +56,7 @@ public struct DynamicallyOrientingNavigationView: View, CustomizableNavigatingIn
         self.navigationState = navigationState
         self.minimumSafeAreaInsets = minimumSafeAreaInsets
         self.onTapExit = onTapExit
+        self.destinationName = destinationName
 
         userLayers = makeMapContent()
 
@@ -88,6 +91,7 @@ public struct DynamicallyOrientingNavigationView: View, CustomizableNavigatingIn
                         onZoomIn: { camera.incrementZoom(by: 1) },
                         onZoomOut: { camera.incrementZoom(by: -1) },
                         showCentering: !camera.isTrackingUserLocationWithCourse,
+                        destinationName: destinationName,
                         onCenter: { camera = navigationCamera },
                         onTapExit: onTapExit
                     )
@@ -108,6 +112,7 @@ public struct DynamicallyOrientingNavigationView: View, CustomizableNavigatingIn
                         onZoomIn: { camera.incrementZoom(by: 1) },
                         onZoomOut: { camera.incrementZoom(by: -1) },
                         showCentering: !camera.isTrackingUserLocationWithCourse,
+                        destinationName: destinationName,
                         onCenter: { camera = navigationCamera },
                         onTapExit: onTapExit
                     )
