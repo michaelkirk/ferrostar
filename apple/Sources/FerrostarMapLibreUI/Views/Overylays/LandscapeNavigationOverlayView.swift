@@ -26,9 +26,10 @@ struct LandscapeNavigationOverlayView: View, CustomizableNavigatingInnerGridView
     var onZoomOut: () -> Void
 
     var showCentering: Bool
+    var destinationName: String?
     var onCenter: () -> Void
 
-    var onTapExit: (() -> Void)?
+    var onTapExit: ((_ didComplete: Bool) -> Void)?
     let currentRoadNameView: AnyView?
 
     let showMute: Bool
@@ -47,8 +48,9 @@ struct LandscapeNavigationOverlayView: View, CustomizableNavigatingInnerGridView
         onZoomIn: @escaping () -> Void = {},
         onZoomOut: @escaping () -> Void = {},
         showCentering: Bool = false,
+        destinationName: String? = nil,
         onCenter: @escaping () -> Void = {},
-        onTapExit: (() -> Void)? = nil,
+        onTapExit: ((_ didComplete: Bool) -> Void)? = nil,
         currentRoadNameView: AnyView?
     ) {
         self.navigationState = navigationState
@@ -61,6 +63,7 @@ struct LandscapeNavigationOverlayView: View, CustomizableNavigatingInnerGridView
         self.onZoomIn = onZoomIn
         self.onZoomOut = onZoomOut
         self.showCentering = showCentering
+        self.destinationName = destinationName
         self.onCenter = onCenter
         self.onTapExit = onTapExit
         self.currentRoadNameView = currentRoadNameView
@@ -77,7 +80,7 @@ struct LandscapeNavigationOverlayView: View, CustomizableNavigatingInnerGridView
                         HStack {
                             TripProgressView(
                                 progress: progress,
-                                onTapExit: onTapExit
+                                onTapExit: { onTapExit?(false) }
                             )
 
                             // TODO: Landscape view (this doesn't quite work since it's half width
@@ -99,6 +102,9 @@ struct LandscapeNavigationOverlayView: View, CustomizableNavigatingInnerGridView
                         remainingSteps: remainingSteps,
                         isExpanded: $isInstructionViewExpanded
                     )
+                } else if case .complete = navigationState?.tripState {
+                    TripCompleteBanner(destinationName: destinationName, onTapExit: { onTapExit?(true) })
+                        .padding(.horizontal, 16)
                 }
             }
 

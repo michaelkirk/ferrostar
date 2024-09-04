@@ -32,9 +32,10 @@ public struct PortraitNavigationView: View, CustomizableNavigatingInnerGridView,
     let navigationCamera: MapViewCamera
     public var currentRoadNameView: AnyView?
 
+    var destinationName: String?
     let isMuted: Bool
     let onTapMute: () -> Void
-    var onTapExit: (() -> Void)?
+    var onTapExit: ((_ didComplete: Bool) -> Void)?
 
     /// Create a portrait navigation view. This view is optimized for display on a portrait screen where the
     /// instructions and trip progress view are on the top and bottom of the screen.
@@ -58,14 +59,16 @@ public struct PortraitNavigationView: View, CustomizableNavigatingInnerGridView,
         navigationState: NavigationState?,
         isMuted: Bool,
         minimumSafeAreaInsets: EdgeInsets = EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16),
+        destinationName: String? = nil, // TODO: document
         onTapMute: @escaping () -> Void,
-        onTapExit: (() -> Void)? = nil,
+        onTapExit: ((_ didComplete: Bool) -> Void)? = nil,
         @MapViewContentBuilder makeMapContent: () -> [StyleLayerDefinition] = { [] }
     ) {
         self.styleURL = styleURL
         self.navigationState = navigationState
         self.isMuted = isMuted
         self.minimumSafeAreaInsets = minimumSafeAreaInsets
+        self.destinationName = destinationName
         self.onTapMute = onTapMute
         self.onTapExit = onTapExit
 
@@ -102,6 +105,7 @@ public struct PortraitNavigationView: View, CustomizableNavigatingInnerGridView,
                     onZoomIn: { camera.incrementZoom(by: 1) },
                     onZoomOut: { camera.incrementZoom(by: -1) },
                     showCentering: !camera.isTrackingUserLocationWithCourse,
+                    destinationName: "125 Fake Street",
                     onCenter: { camera = navigationCamera },
                     onTapExit: onTapExit,
                     currentRoadNameView: currentRoadNameView

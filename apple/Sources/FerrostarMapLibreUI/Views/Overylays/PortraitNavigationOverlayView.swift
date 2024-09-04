@@ -29,9 +29,10 @@ struct PortraitNavigationOverlayView<T: SpokenInstructionObserver & ObservableOb
     var onZoomOut: () -> Void
 
     var showCentering: Bool
+    var destinationName: String?
     var onCenter: () -> Void
 
-    var onTapExit: (() -> Void)?
+    var onTapExit: ((_ didComplete: Bool) -> Void)?
     let currentRoadNameView: AnyView?
 
     let showMute: Bool
@@ -49,8 +50,9 @@ struct PortraitNavigationOverlayView<T: SpokenInstructionObserver & ObservableOb
         onZoomIn: @escaping () -> Void = {},
         onZoomOut: @escaping () -> Void = {},
         showCentering: Bool = false,
+        destinationName: String? = nil,
         onCenter: @escaping () -> Void = {},
-        onTapExit: (() -> Void)? = nil,
+        onTapExit: ((_ didComplete: Bool) -> Void)? = nil,
         currentRoadNameView: AnyView?
     ) {
         self.navigationState = navigationState
@@ -64,6 +66,7 @@ struct PortraitNavigationOverlayView<T: SpokenInstructionObserver & ObservableOb
         self.onZoomOut = onZoomOut
         self.showCentering = showCentering
         self.onCenter = onCenter
+        self.destinationName = destinationName
         self.onTapExit = onTapExit
         self.currentRoadNameView = currentRoadNameView
     }
@@ -109,7 +112,7 @@ struct PortraitNavigationOverlayView<T: SpokenInstructionObserver & ObservableOb
 
                         TripProgressView(
                             progress: progress,
-                            onTapExit: onTapExit
+                            onTapExit: { onTapExit?(false) }
                         )
                     }
                 }
@@ -129,6 +132,8 @@ struct PortraitNavigationOverlayView<T: SpokenInstructionObserver & ObservableOb
                     isExpanded: $isInstructionViewExpanded,
                     sizeWhenNotExpanded: $instructionsViewSizeWhenNotExpanded
                 )
+            } else if case .complete = navigationState?.tripState {
+                TripCompleteBanner(destinationName: destinationName, onTapExit: { onTapExit?(true) })
             }
         }
     }

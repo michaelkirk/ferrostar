@@ -29,9 +29,10 @@ public struct LandscapeNavigationView: View, CustomizableNavigatingInnerGridView
     public var midLeading: (() -> AnyView)?
     public var bottomTrailing: (() -> AnyView)?
 
+    var destinationName: String?
     let isMuted: Bool
     let onTapMute: () -> Void
-    var onTapExit: (() -> Void)?
+    var onTapExit: ((_ didComplete: Bool) -> Void)?
 
     public var minimumSafeAreaInsets: EdgeInsets
 
@@ -57,14 +58,16 @@ public struct LandscapeNavigationView: View, CustomizableNavigatingInnerGridView
         navigationState: NavigationState?,
         isMuted: Bool,
         minimumSafeAreaInsets: EdgeInsets = EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16),
+        destinationName: String? = nil, // TODO: document
         onTapMute: @escaping () -> Void,
-        onTapExit: (() -> Void)? = nil,
+        onTapExit: ((_ didComplete: Bool) -> Void)? = nil,
         @MapViewContentBuilder makeMapContent: () -> [StyleLayerDefinition] = { [] }
     ) {
         self.styleURL = styleURL
         self.navigationState = navigationState
         self.isMuted = isMuted
         self.minimumSafeAreaInsets = minimumSafeAreaInsets
+        self.destinationName = destinationName
         self.onTapMute = onTapMute
         self.onTapExit = onTapExit
 
@@ -100,6 +103,7 @@ public struct LandscapeNavigationView: View, CustomizableNavigatingInnerGridView
                     onZoomIn: { camera.incrementZoom(by: 1) },
                     onZoomOut: { camera.incrementZoom(by: -1) },
                     showCentering: !camera.isTrackingUserLocationWithCourse,
+                    destinationName: destinationName,
                     onCenter: { camera = navigationCamera },
                     onTapExit: onTapExit,
                     currentRoadNameView: currentRoadNameView
