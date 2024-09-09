@@ -30,6 +30,8 @@ public struct DynamicallyOrientingNavigationView: View {
 
     public var minimumSafeAreaInsets: EdgeInsets
 
+    public var onStyleLoaded: ((MLNStyle) -> Void)?
+
     /// Create a dynamically orienting navigation view. This view automatically arranges child views for both portrait
     /// and landscape orientations.
     ///
@@ -81,10 +83,11 @@ public struct DynamicallyOrientingNavigationView: View {
                     onUserTrackingModeChanged: { mode, _ in
                         userTrackingMode = mode
                     },
-                    onStyleLoaded: { _ in
+                    onStyleLoaded: { style in
                         if isNavigating {
                             camera = navigationCamera
                         }
+                        onStyleLoaded?(style)
                     }
                 ) {
                     userLayers
