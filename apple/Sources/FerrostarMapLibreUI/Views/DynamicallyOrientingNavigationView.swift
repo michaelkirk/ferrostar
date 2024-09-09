@@ -25,6 +25,7 @@ public struct DynamicallyOrientingNavigationView: View, CustomizableNavigatingIn
     public var bottomTrailing: (() -> AnyView)?
     public var destinationName: String?
 
+    var onStyleLoaded: ((MLNStyle) -> Void)?
     var onTapExit: (() -> Void)?
 
     public var minimumSafeAreaInsets: EdgeInsets
@@ -49,14 +50,16 @@ public struct DynamicallyOrientingNavigationView: View, CustomizableNavigatingIn
         navigationState: NavigationState?,
         minimumSafeAreaInsets: EdgeInsets = EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16),
         destinationName: String? = nil,
+        onStyleLoaded: ((MLNStyle) -> Void)? = nil,
         onTapExit: (() -> Void)? = nil,
         @MapViewContentBuilder makeMapContent: () -> [StyleLayerDefinition] = { [] }
     ) {
         self.styleURL = styleURL
         self.navigationState = navigationState
         self.minimumSafeAreaInsets = minimumSafeAreaInsets
-        self.onTapExit = onTapExit
         self.destinationName = destinationName
+        self.onStyleLoaded = onStyleLoaded
+        self.onTapExit = onTapExit
 
         userLayers = makeMapContent()
 
@@ -71,8 +74,9 @@ public struct DynamicallyOrientingNavigationView: View, CustomizableNavigatingIn
                     styleURL: styleURL,
                     camera: $camera,
                     navigationState: navigationState,
-                    onStyleLoaded: { _ in
+                    onStyleLoaded: { style in
                         camera = navigationCamera
+                        onStyleLoaded?(style)
                     }
                 ) {
                     userLayers
