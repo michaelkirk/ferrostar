@@ -34,6 +34,7 @@ public struct DynamicallyOrientingNavigationView: View, CustomizableNavigatingIn
     let isMuted: Bool
     let onTapMute: () -> Void
     var onTapExit: ((_ didComplete: Bool) -> Void)?
+    var onStyleLoaded: ((MLNStyle) -> Void)?
 
     public var minimumSafeAreaInsets: EdgeInsets
 
@@ -59,6 +60,7 @@ public struct DynamicallyOrientingNavigationView: View, CustomizableNavigatingIn
         isMuted: Bool,
         minimumSafeAreaInsets: EdgeInsets = EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16),
         destinationName: String? = nil,
+        onStyleLoaded: ((MLNStyle) -> Void)? = nil,
         onTapMute: @escaping () -> Void,
         onTapExit: ((_ didComplete: Bool) -> Void)? = nil,
         @MapViewContentBuilder makeMapContent: () -> [StyleLayerDefinition] = { [] }
@@ -68,6 +70,7 @@ public struct DynamicallyOrientingNavigationView: View, CustomizableNavigatingIn
         self.isMuted = isMuted
         self.minimumSafeAreaInsets = minimumSafeAreaInsets
         self.destinationName = destinationName
+        self.onStyleLoaded = onStyleLoaded
         self.onTapMute = onTapMute
         self.onTapExit = onTapExit
 
@@ -86,8 +89,9 @@ public struct DynamicallyOrientingNavigationView: View, CustomizableNavigatingIn
                     styleURL: styleURL,
                     camera: $camera,
                     navigationState: navigationState,
-                    onStyleLoaded: { _ in
+                    onStyleLoaded: { style in
                         camera = navigationCamera
+                        onStyleLoaded?(style)
                     }
                 ) {
                     userLayers
