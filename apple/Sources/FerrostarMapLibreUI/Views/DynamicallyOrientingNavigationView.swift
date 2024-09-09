@@ -41,6 +41,8 @@ public struct DynamicallyOrientingNavigationView: View,
     public var progressView: ((NavigationState?, (() -> Void)?) -> AnyView)?
     public var instructionsView: ((NavigationState?, Binding<Bool>, Binding<CGSize>) -> AnyView)?
     public var currentRoadNameView: ((NavigationState?) -> AnyView)?
+    public var onStyleLoaded: ((MLNStyle) -> Void)?
+
 
     /// Create a dynamically orienting navigation view. This view automatically arranges child views for both portrait
     /// and landscape orientations.
@@ -88,8 +90,9 @@ public struct DynamicallyOrientingNavigationView: View,
                     styleURL: styleURL,
                     camera: $camera,
                     navigationState: navigationState,
-                    onStyleLoaded: { _ in
+                    onStyleLoaded: { style in
                         camera = navigationCamera
+                        onStyleLoaded?(style)
                     }
                 ) {
                     userLayers
