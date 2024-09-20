@@ -77,17 +77,13 @@ struct LandscapeNavigationOverlayView: View, CustomizableNavigatingInnerGridView
                     if case .navigating = navigationState?.tripState,
                        let progress = navigationState?.currentProgress
                     {
-                        HStack {
-                            TripProgressView(
-                                progress: progress,
-                                onTapExit: { onTapExit?(false) }
-                            )
-
-                            // TODO: Landscape view (this doesn't quite work since it's half width
-//                            if !showCentering {
-//                                currentRoadNameView
-//                            }
-                        }
+                        TripProgressView(
+                            progress: progress,
+                            onTapExit: { onTapExit?(false) }
+                        )
+                    } else if case .complete = navigationState?.tripState {
+                        TripCompleteBanner(destinationName: destinationName, onTapExit: { onTapExit?(true) })
+                            .padding(.horizontal, 16)
                     }
                 }
                 if case .navigating = navigationState?.tripState,
@@ -102,9 +98,6 @@ struct LandscapeNavigationOverlayView: View, CustomizableNavigatingInnerGridView
                         remainingSteps: remainingSteps,
                         isExpanded: $isInstructionViewExpanded
                     )
-                } else if case .complete = navigationState?.tripState {
-                    TripCompleteBanner(destinationName: destinationName, onTapExit: { onTapExit?(true) })
-                        .padding(.horizontal, 16)
                 }
             }
 

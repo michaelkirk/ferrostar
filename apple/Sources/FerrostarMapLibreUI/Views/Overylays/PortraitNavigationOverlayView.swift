@@ -115,6 +115,8 @@ struct PortraitNavigationOverlayView<T: SpokenInstructionObserver & ObservableOb
                             onTapExit: { onTapExit?(false) }
                         )
                     }
+                } else if case .complete = navigationState?.tripState {
+                    TripCompleteBanner(destinationName: destinationName, onTapExit: { onTapExit?(true) })
                 }
             }
             .padding(.top, instructionsViewSizeWhenNotExpanded.height + 16)
@@ -132,8 +134,6 @@ struct PortraitNavigationOverlayView<T: SpokenInstructionObserver & ObservableOb
                     isExpanded: $isInstructionViewExpanded,
                     sizeWhenNotExpanded: $instructionsViewSizeWhenNotExpanded
                 )
-            } else if case .complete = navigationState?.tripState {
-                TripCompleteBanner(destinationName: destinationName, onTapExit: { onTapExit?(true) })
             }
         }
     }
