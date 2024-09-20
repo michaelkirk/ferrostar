@@ -9,8 +9,11 @@ import MapLibreSwiftUI
 import SwiftUI
 
 let style = URL(string: "https://tiles.stadiamaps.com/styles/outdoors.json?api_key=\(APIKeys.shared.stadiaMapsAPIKey)")!
-private let initialLocation = CLLocation(latitude: 37.332726,
-                                         longitude: -122.031790)
+// private let initialLocation = CLLocation(latitude: 37.332726,
+//                                         longitude: -122.031790)
+// Closer to Cupertino HS destination
+private let initialLocation = CLLocation(latitude: 37.314590,
+                                         longitude: -122.007765)
 
 struct DemoNavigationView: View {
     private let navigationDelegate = NavigationDelegate()
@@ -37,7 +40,7 @@ struct DemoNavigationView: View {
 
     init() {
         let simulated = SimulatedLocationProvider(location: initialLocation)
-        simulated.warpFactor = 2
+        simulated.warpFactor = 8
         locationProvider = simulated
 
         // Configure the navigation session.
