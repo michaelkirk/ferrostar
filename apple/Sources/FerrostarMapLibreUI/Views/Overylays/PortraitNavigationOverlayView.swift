@@ -84,6 +84,8 @@ struct PortraitNavigationOverlayView: View, CustomizableNavigatingInnerGridView 
                         progress: progress,
                         onTapExit: onTapExit
                     )
+                } else if case .complete = navigationState?.tripState {
+                    TripCompleteBanner(destinationName: destinationName, onTapExit: onTapExit)
                 }
             }.padding(.top, instructionsViewSizeWhenNotExpanded.height)
 
@@ -100,8 +102,6 @@ struct PortraitNavigationOverlayView: View, CustomizableNavigatingInnerGridView 
                     isExpanded: $isInstructionViewExpanded,
                     sizeWhenNotExpanded: $instructionsViewSizeWhenNotExpanded
                 )
-            } else if case .complete = navigationState?.tripState {
-                TripCompleteBanner(destinationName: destinationName, onTapExit: onTapExit)
             }
         }
     }

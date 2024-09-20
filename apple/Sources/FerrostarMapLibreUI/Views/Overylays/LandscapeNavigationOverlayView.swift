@@ -61,6 +61,9 @@ struct LandscapeNavigationOverlayView: View, CustomizableNavigatingInnerGridView
                             progress: progress,
                             onTapExit: onTapExit
                         )
+                    } else if case .complete = navigationState?.tripState {
+                        TripCompleteBanner(destinationName: destinationName, onTapExit: onTapExit)
+                            .padding(.horizontal, 16)
                     }
                 }
                 if case .navigating = navigationState?.tripState,
@@ -75,9 +78,6 @@ struct LandscapeNavigationOverlayView: View, CustomizableNavigatingInnerGridView
                         remainingSteps: remainingSteps,
                         isExpanded: $isInstructionViewExpanded
                     )
-                } else if case .complete = navigationState?.tripState {
-                    TripCompleteBanner(destinationName: destinationName, onTapExit: onTapExit)
-                        .padding(.horizontal, 16)
                 }
             }
 
