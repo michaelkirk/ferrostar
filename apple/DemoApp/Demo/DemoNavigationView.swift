@@ -39,9 +39,17 @@ struct DemoNavigationView: View {
     @State private var snappedCamera = true
 
     init() {
-        let simulated = SimulatedLocationProvider(location: initialLocation)
-        simulated.warpFactor = 8
-        locationProvider = simulated
+        let simulateLocation = false
+        if simulateLocation {
+            let simulated = SimulatedLocationProvider(location: initialLocation)
+            simulated.warpFactor = 8
+            locationProvider = simulated
+        } else {
+            locationProvider = CoreLocationProvider(
+                activityType: .otherNavigation,
+                allowBackgroundLocationUpdates: false
+            )
+        }
 
         // Configure the navigation session.
         // You have a lot of flexibility here based on your use case.
