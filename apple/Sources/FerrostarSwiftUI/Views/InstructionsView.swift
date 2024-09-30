@@ -71,6 +71,10 @@ public struct InstructionsView: View {
             guard let visualInstruction = step.visualInstructions.first else {
                 return nil
             }
+            // Work around redundant "arrival" step w/ travelmux
+            guard step.distance > 0 else {
+                return nil
+            }
             return (visualInstruction, step)
         }
     }
