@@ -67,9 +67,12 @@ struct LandscapeNavigationOverlayView: View, CustomizableNavigatingInnerGridView
                     }
                 }
                 if case .navigating = navigationState?.tripState,
-                   let visualInstruction = navigationState?.currentVisualInstruction,
                    let progress = navigationState?.currentProgress,
-                   let remainingSteps = navigationState?.remainingSteps
+                   let remainingSteps = navigationState?.remainingSteps,
+                   // FIXME: without this long stretches of the trip show no banner.
+                   // This seems to be a difference with travelmux vs. stadia
+                   let visualInstruction = (navigationState?.currentVisualInstruction ?? remainingSteps
+                       .compactMap(\.visualInstructions.first).first)
                 {
                     InstructionsView(
                         visualInstruction: visualInstruction,

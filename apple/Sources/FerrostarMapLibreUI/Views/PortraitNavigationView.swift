@@ -50,7 +50,7 @@ public struct PortraitNavigationView: View, CustomizableNavigatingInnerGridView 
         navigationCamera: MapViewCamera = .automotiveNavigation(),
         navigationState: NavigationState?,
         minimumSafeAreaInsets: EdgeInsets = EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16),
-        destinationName: String? = nil, // TODO document
+        destinationName: String? = nil, // TODO: document
         onTapExit: (() -> Void)? = nil,
         @MapViewContentBuilder makeMapContent: () -> [StyleLayerDefinition] = { [] }
     ) {
