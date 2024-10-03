@@ -37,6 +37,9 @@
         }
       }
     },
+    "End Navigation" : {
+
+    },
     "Speed Limit" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -47,6 +50,12 @@
           }
         }
       }
+    },
+    "You have arrived at your destination." : {
+
+    },
+    "You have arrived!" : {
+
     }
   },
   "version" : "1.0"
