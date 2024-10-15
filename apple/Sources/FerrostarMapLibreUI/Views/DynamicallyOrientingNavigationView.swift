@@ -23,7 +23,9 @@ public struct DynamicallyOrientingNavigationView: View, CustomizableNavigatingIn
     public var topTrailing: (() -> AnyView)?
     public var midLeading: (() -> AnyView)?
     public var bottomTrailing: (() -> AnyView)?
+    public var destinationName: String?
 
+    var onStyleLoaded: ((MLNStyle) -> Void)?
     var onTapExit: (() -> Void)?
 
     public var minimumSafeAreaInsets: EdgeInsets
@@ -47,12 +49,16 @@ public struct DynamicallyOrientingNavigationView: View, CustomizableNavigatingIn
         navigationCamera: MapViewCamera = .automotiveNavigation(),
         navigationState: NavigationState?,
         minimumSafeAreaInsets: EdgeInsets = EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16),
+        destinationName: String? = nil,
+        onStyleLoaded: ((MLNStyle) -> Void)? = nil,
         onTapExit: (() -> Void)? = nil,
         @MapViewContentBuilder makeMapContent: () -> [StyleLayerDefinition] = { [] }
     ) {
         self.styleURL = styleURL
         self.navigationState = navigationState
         self.minimumSafeAreaInsets = minimumSafeAreaInsets
+        self.destinationName = destinationName
+        self.onStyleLoaded = onStyleLoaded
         self.onTapExit = onTapExit
 
         userLayers = makeMapContent()
@@ -68,8 +74,9 @@ public struct DynamicallyOrientingNavigationView: View, CustomizableNavigatingIn
                     styleURL: styleURL,
                     camera: $camera,
                     navigationState: navigationState,
-                    onStyleLoaded: { _ in
+                    onStyleLoaded: { style in
                         camera = navigationCamera
+                        onStyleLoaded?(style)
                     }
                 ) {
                     userLayers
@@ -84,10 +91,11 @@ public struct DynamicallyOrientingNavigationView: View, CustomizableNavigatingIn
                     LandscapeNavigationOverlayView(
                         navigationState: navigationState,
                         speedLimit: nil,
-                        showZoom: true,
+                        showZoom: false,
                         onZoomIn: { camera.incrementZoom(by: 1) },
                         onZoomOut: { camera.incrementZoom(by: -1) },
                         showCentering: !camera.isTrackingUserLocationWithCourse,
+                        destinationName: destinationName,
                         onCenter: { camera = navigationCamera },
                         onTapExit: onTapExit
                     )
@@ -104,10 +112,11 @@ public struct DynamicallyOrientingNavigationView: View, CustomizableNavigatingIn
                     PortraitNavigationOverlayView(
                         navigationState: navigationState,
                         speedLimit: nil,
-                        showZoom: true,
+                        showZoom: false,
                         onZoomIn: { camera.incrementZoom(by: 1) },
                         onZoomOut: { camera.incrementZoom(by: -1) },
                         showCentering: !camera.isTrackingUserLocationWithCourse,
+                        destinationName: destinationName,
                         onCenter: { camera = navigationCamera },
                         onTapExit: onTapExit
                     )

@@ -23,6 +23,7 @@ struct LandscapeNavigationOverlayView: View, CustomizableNavigatingInnerGridView
     var onZoomIn: () -> Void
     var onZoomOut: () -> Void
     var showCentering: Bool
+    var destinationName: String?
     var onCenter: () -> Void
     var onTapExit: (() -> Void)?
 
@@ -33,6 +34,7 @@ struct LandscapeNavigationOverlayView: View, CustomizableNavigatingInnerGridView
         onZoomIn: @escaping () -> Void = {},
         onZoomOut: @escaping () -> Void = {},
         showCentering: Bool = false,
+        destinationName: String? = nil,
         onCenter: @escaping () -> Void = {},
         onTapExit: (() -> Void)? = nil
     ) {
@@ -42,6 +44,7 @@ struct LandscapeNavigationOverlayView: View, CustomizableNavigatingInnerGridView
         self.onZoomIn = onZoomIn
         self.onZoomOut = onZoomOut
         self.showCentering = showCentering
+        self.destinationName = destinationName
         self.onCenter = onCenter
         self.onTapExit = onTapExit
     }
@@ -58,12 +61,18 @@ struct LandscapeNavigationOverlayView: View, CustomizableNavigatingInnerGridView
                             progress: progress,
                             onTapExit: onTapExit
                         )
+                    } else if case .complete = navigationState?.tripState {
+                        TripCompleteBanner(destinationName: destinationName, onTapExit: onTapExit)
+                            .padding(.horizontal, 16)
                     }
                 }
                 if case .navigating = navigationState?.tripState,
-                   let visualInstruction = navigationState?.currentVisualInstruction,
                    let progress = navigationState?.currentProgress,
-                   let remainingSteps = navigationState?.remainingSteps
+                   let remainingSteps = navigationState?.remainingSteps,
+                   // FIXME: without this long stretches of the trip show no banner.
+                   // This seems to be a difference with travelmux vs. stadia
+                   let visualInstruction = (navigationState?.currentVisualInstruction ?? remainingSteps
+                       .compactMap(\.visualInstructions.first).first)
                 {
                     InstructionsView(
                         visualInstruction: visualInstruction,

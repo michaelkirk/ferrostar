@@ -24,6 +24,7 @@ struct PortraitNavigationOverlayView: View, CustomizableNavigatingInnerGridView 
     var onZoomIn: () -> Void
     var onZoomOut: () -> Void
     var showCentering: Bool
+    var destinationName: String?
     var onCenter: () -> Void
     var onTapExit: (() -> Void)?
 
@@ -34,6 +35,7 @@ struct PortraitNavigationOverlayView: View, CustomizableNavigatingInnerGridView 
         onZoomIn: @escaping () -> Void = {},
         onZoomOut: @escaping () -> Void = {},
         showCentering: Bool = false,
+        destinationName: String? = nil,
         onCenter: @escaping () -> Void = {},
         onTapExit: (() -> Void)? = nil
     ) {
@@ -44,6 +46,7 @@ struct PortraitNavigationOverlayView: View, CustomizableNavigatingInnerGridView 
         self.onZoomOut = onZoomOut
         self.showCentering = showCentering
         self.onCenter = onCenter
+        self.destinationName = destinationName
         self.onTapExit = onTapExit
     }
 
@@ -81,13 +84,18 @@ struct PortraitNavigationOverlayView: View, CustomizableNavigatingInnerGridView 
                         progress: progress,
                         onTapExit: onTapExit
                     )
+                } else if case .complete = navigationState?.tripState {
+                    TripCompleteBanner(destinationName: destinationName, onTapExit: onTapExit)
                 }
             }.padding(.top, instructionsViewSizeWhenNotExpanded.height)
 
             if case .navigating = navigationState?.tripState,
-               let visualInstruction = navigationState?.currentVisualInstruction,
                let progress = navigationState?.currentProgress,
-               let remainingSteps = navigationState?.remainingSteps
+               let remainingSteps = navigationState?.remainingSteps,
+               // FIXME: without this long stretches of the trip show no banner.
+               // This seems to be a difference with travelmux vs. stadia
+               let visualInstruction = (navigationState?.currentVisualInstruction ?? remainingSteps
+                   .compactMap(\.visualInstructions.first).first)
             {
                 InstructionsView(
                     visualInstruction: visualInstruction,
