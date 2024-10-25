@@ -32,7 +32,7 @@ public struct LandscapeNavigationView: View, CustomizableNavigatingInnerGridView
     var destinationName: String?
     let isMuted: Bool
     let onTapMute: () -> Void
-    var onTapExit: ((_ didComplete: Bool) -> Void)?
+    var onTapExit: ((_ tripComplete: Bool) -> Void)?
 
     public var minimumSafeAreaInsets: EdgeInsets
 
@@ -60,7 +60,7 @@ public struct LandscapeNavigationView: View, CustomizableNavigatingInnerGridView
         minimumSafeAreaInsets: EdgeInsets = EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16),
         destinationName: String? = nil, // TODO: document
         onTapMute: @escaping () -> Void,
-        onTapExit: ((_ didComplete: Bool) -> Void)? = nil,
+        onTapExit: ((_ tripComplete: Bool) -> Void)? = nil,
         @MapViewContentBuilder makeMapContent: () -> [StyleLayerDefinition] = { [] }
     ) {
         self.styleURL = styleURL

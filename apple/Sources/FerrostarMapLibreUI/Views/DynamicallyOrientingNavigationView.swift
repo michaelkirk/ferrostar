@@ -33,8 +33,8 @@ public struct DynamicallyOrientingNavigationView: View, CustomizableNavigatingIn
 
     let isMuted: Bool
     let onTapMute: () -> Void
-    var onTapExit: ((_ didComplete: Bool) -> Void)?
     var onStyleLoaded: ((MLNStyle) -> Void)?
+    var onTapExit: ((_ tripComplete: Bool) -> Void)?
 
     public var minimumSafeAreaInsets: EdgeInsets
 
@@ -62,7 +62,7 @@ public struct DynamicallyOrientingNavigationView: View, CustomizableNavigatingIn
         destinationName: String? = nil,
         onStyleLoaded: ((MLNStyle) -> Void)? = nil,
         onTapMute: @escaping () -> Void,
-        onTapExit: ((_ didComplete: Bool) -> Void)? = nil,
+        onTapExit: ((_ tripComplete: Bool) -> Void)? = nil,
         @MapViewContentBuilder makeMapContent: () -> [StyleLayerDefinition] = { [] }
     ) {
         self.styleURL = styleURL

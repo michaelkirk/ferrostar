@@ -28,8 +28,8 @@ struct LandscapeNavigationOverlayView: View, CustomizableNavigatingInnerGridView
     var showCentering: Bool
     var destinationName: String?
     var onCenter: () -> Void
+    var onTapExit: ((_ tripComplete: Bool) -> Void)?
 
-    var onTapExit: ((_ didComplete: Bool) -> Void)?
     let currentRoadNameView: AnyView?
 
     let showMute: Bool

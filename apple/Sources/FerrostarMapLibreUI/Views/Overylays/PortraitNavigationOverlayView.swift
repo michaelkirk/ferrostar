@@ -32,12 +32,12 @@ struct PortraitNavigationOverlayView<T: SpokenInstructionObserver & ObservableOb
     var destinationName: String?
     var onCenter: () -> Void
 
-    var onTapExit: ((_ didComplete: Bool) -> Void)?
     let currentRoadNameView: AnyView?
 
     let showMute: Bool
     let isMuted: Bool
     let onMute: () -> Void
+    var onTapExit: ((_ tripComplete: Bool) -> Void)?
 
     init(
         navigationState: NavigationState?,

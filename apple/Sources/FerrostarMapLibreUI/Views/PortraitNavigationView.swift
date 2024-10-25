@@ -35,7 +35,7 @@ public struct PortraitNavigationView: View, CustomizableNavigatingInnerGridView,
     var destinationName: String?
     let isMuted: Bool
     let onTapMute: () -> Void
-    var onTapExit: ((_ didComplete: Bool) -> Void)?
+    var onTapExit: ((_ tripComplete: Bool) -> Void)?
 
     /// Create a portrait navigation view. This view is optimized for display on a portrait screen where the
     /// instructions and trip progress view are on the top and bottom of the screen.
@@ -61,7 +61,7 @@ public struct PortraitNavigationView: View, CustomizableNavigatingInnerGridView,
         minimumSafeAreaInsets: EdgeInsets = EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16),
         destinationName: String? = nil, // TODO: document
         onTapMute: @escaping () -> Void,
-        onTapExit: ((_ didComplete: Bool) -> Void)? = nil,
+        onTapExit: ((_ tripComplete: Bool) -> Void)? = nil,
         @MapViewContentBuilder makeMapContent: () -> [StyleLayerDefinition] = { [] }
     ) {
         self.styleURL = styleURL
