@@ -23,6 +23,8 @@ public struct LandscapeNavigationView: View, CustomizableNavigatingInnerGridView
     public var midLeading: (() -> AnyView)?
     public var bottomTrailing: (() -> AnyView)?
 
+    var destinationName: String?
+
     var onTapExit: (() -> Void)?
 
     public var minimumSafeAreaInsets: EdgeInsets
@@ -47,12 +49,14 @@ public struct LandscapeNavigationView: View, CustomizableNavigatingInnerGridView
         navigationCamera: MapViewCamera = .automotiveNavigation(),
         navigationState: NavigationState?,
         minimumSafeAreaInsets: EdgeInsets = EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16),
+        destinationName: String? = nil, // TODO: document
         onTapExit: (() -> Void)? = nil,
         @MapViewContentBuilder makeMapContent: () -> [StyleLayerDefinition] = { [] }
     ) {
         self.styleURL = styleURL
         self.navigationState = navigationState
         self.minimumSafeAreaInsets = minimumSafeAreaInsets
+        self.destinationName = destinationName
         self.onTapExit = onTapExit
 
         userLayers = makeMapContent()
@@ -82,6 +86,7 @@ public struct LandscapeNavigationView: View, CustomizableNavigatingInnerGridView
                     onZoomIn: { camera.incrementZoom(by: 1) },
                     onZoomOut: { camera.incrementZoom(by: -1) },
                     showCentering: !camera.isTrackingUserLocationWithCourse,
+                    destinationName: destinationName,
                     onCenter: { camera = navigationCamera },
                     onTapExit: onTapExit
                 )

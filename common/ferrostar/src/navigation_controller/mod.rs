@@ -117,25 +117,21 @@ impl NavigationController {
                         remaining_steps.remove(0);
 
                         // Update remaining waypoints
-                        let should_advance_waypoint = if let Some(waypoint) =
-                            remaining_waypoints.first()
-                        {
+                        let mut remaining_waypoints = remaining_waypoints.clone();
+                        if let Some(waypoint) = remaining_waypoints.first() {
                             let current_location: Point = snapped_user_location.coordinates.into();
                             let next_waypoint: Point = waypoint.coordinate.into();
                             // TODO: This is just a hard-coded threshold for the time being.
                             // More sophisticated behavior will take some time and use cases, so punting on this for now.
-                            current_location.haversine_distance(&next_waypoint) < 100.0
-                        } else {
-                            false
-                        };
+                            if current_location.haversine_distance(&next_waypoint) < 25.0 {
+                                remaining_waypoints.remove(0);
+                            }
+                        }
 
-                        let remaining_waypoints = if should_advance_waypoint {
-                            let mut remaining_waypoints = remaining_waypoints.clone();
-                            remaining_waypoints.remove(0);
-                            remaining_waypoints
-                        } else {
-                            remaining_waypoints.clone()
-                        };
+                        if remaining_waypoints.is_empty() {
+                            // We've arrived at the final way point, we're done.
+                            return TripState::Complete;
+                        }
 
                         let progress = calculate_trip_progress(
                             &(*snapped_user_location).into(),
