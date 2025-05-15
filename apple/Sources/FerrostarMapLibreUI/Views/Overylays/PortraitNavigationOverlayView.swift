@@ -98,10 +98,11 @@ struct PortraitNavigationOverlayView: View {
                         case .showRecenter, .showCurrentLocation:
                             EmptyView()
                         }
-
-                        componentsConfig.getProgressView(navigationState, onTapExit: onTapExit)
                     }
                 }
+                // Maps.Earth: We also show a `trip complete` state in our progress view, so
+                // we want to render it even when not case .navigating
+                componentsConfig.getProgressView(navigationState, onTapExit: onTapExit)
             }
             .padding(.top, topPadding + 16)
 
