@@ -106,10 +106,11 @@ struct PortraitNavigationOverlayView: View, CustomizableNavigatingInnerGridView 
                         if case .hidden = cameraControlState {
                             currentRoadNameView(navigationState)
                         }
-
-                        progressView(navigationState, onTapExit)
                     }
                 }
+                // Maps.Earth: We also show a `trip complete` state in our progress view, so
+                // we want to render it even when not case .navigating
+                progressView(navigationState, onTapExit)
             }
             .padding(.top, instructionsViewSizeWhenNotExpanded.height + 16)
 
