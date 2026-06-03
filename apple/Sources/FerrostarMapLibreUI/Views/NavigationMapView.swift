@@ -69,7 +69,7 @@ public struct NavigationMapView: View {
         GeometryReader { geometry in
             MapView(
                 styleURL: styleURL,
-                camera: $camera,
+                camera: followingCamera,
                 locationManager: activeLocationManager,
                 activity: activity
             ) {
@@ -138,6 +138,46 @@ public struct NavigationMapView: View {
             return activeNavigatingLocationManager
         }
         return locationManagerConfiguration?.nonNavigatingLocationManager
+    }
+
+    /// A camera binding that prevents zoom-only gestures from exiting following mode during
+    /// active navigation. This allows the user to zoom in/out of their current course without breaking camera
+    /// "following". This matches the behavior of the zoom in/out buttons, but with gestures.
+    ///
+    /// Pan gestures are passed through unchanged, so the user can still break "following" to explore the map
+    /// while navigating.
+    private var followingCamera: Binding<MapViewCamera> {
+        Binding(
+            get: { camera },
+            set: { newCamera in
+                guard navigationState?.isNavigating == true,
+                      case let .centered(_, zoom, _, _, _) = newCamera.state,
+                      let reason = newCamera.lastReasonForChange,
+                      [.gesturePinch, .gestureZoomIn, .gestureZoomOut, .gestureOneFingerZoom]
+                      .contains(reason)
+                else {
+                    camera = newCamera
+                    return
+                }
+
+                switch camera.state {
+                case let .trackingUserLocation(_, pitch, pitchRange, direction):
+                    camera = .trackUserLocation(
+                        zoom: zoom, pitch: pitch, pitchRange: pitchRange, direction: direction
+                    )
+                case let .trackingUserLocationWithHeading(_, pitch, pitchRange):
+                    camera = .trackUserLocationWithHeading(
+                        zoom: zoom, pitch: pitch, pitchRange: pitchRange
+                    )
+                case let .trackingUserLocationWithCourse(_, pitch, pitchRange):
+                    camera = .trackUserLocationWithCourse(
+                        zoom: zoom, pitch: pitch, pitchRange: pitchRange
+                    )
+                default:
+                    camera = newCamera
+                }
+            }
+        )
     }
 }
 
